@@ -1,0 +1,52 @@
+name: campus_nexus
+description: Futuristic campus app with AI integration.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.4.9  # State management
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  firebase_functions: ^0.11.0+2  # For Cloud Functions calls
+  firebase_messaging: ^14.7.10  # FCM notifications
+  firebase_crashlytics: ^3.4.6
+  firebase_analytics: ^10.7.2
+  google_sign_in: ^6.1.6
+  flutter_animate: ^4.2.0+1  # Animations
+  rive: ^0.11.4  # Rive animations
+  intl: ^0.18.1  # Localization
+  flutter_localizations:
+    sdk: flutter
+  google_fonts: ^6.1.0  # Futuristic fonts (Orbitron)
+  shared_preferences: ^2.2.2  # Local storage
+  image_picker: ^1.0.4  # For uploads
+  flutter_spinkit: ^5.2.0  # Loaders
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  build_runner: ^2.4.7
+  riverpod_generator: ^2.3.9  # For code-gen if needed
+
+flutter:
+  generate: true  # For l10n
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/rive/
+  fonts:
+    - family: Orbitron
+      fonts:
+        - asset: assets/fonts/Orbitron-Regular.ttf
+        - asset: assets/fonts/Orbitron-Bold.ttf
+          weight: 700
