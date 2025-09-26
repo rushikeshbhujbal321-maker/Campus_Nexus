@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Role-based access
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'; }
+    function isOwner(doc) { return isSignedIn() && doc.data.userId == request.auth.uid; }
+    
+    // Users: Read own, admins read all
+    match /users/{userId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn();
+    }
+    
+    // Highlights (events, etc.): Public read, admins write
+    match /highlights/{doc} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Lost & Found: Students create/read, admins approve
+    match /lost_found/{doc} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if isAdmin() || isOwner(resource);
+    }
+    
+    // Complaints: Anonymous create, role-based read
+    match /complaints/{doc} {
+      allow create: if true;  // Anonymous
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow update: if isAdmin();
+    }
+    
+    // Skills/Feed: Students interact, admins moderate
+    match /skills/{doc} { allow read, write: if isSignedIn(); }
+    match /feed_posts/{doc} { allow read: if true; allow create, update: if isSignedIn(); allow delete: if isAdmin() || isOwner(resource); }
+    
+    // External Affairs: Public read
+    match /external_affairs/{doc} { allow read: if true; allow write: if isAdmin(); }
+  }
+}
